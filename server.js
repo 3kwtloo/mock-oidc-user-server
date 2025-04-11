@@ -29,7 +29,7 @@ const oidcConfig = {
   }
 };
 
-const oidc = new Provider(`http://${host}:${port}`, oidcConfig);
+const oidc = new Provider(host, oidcConfig);
 
 const clients = [
   {
@@ -46,7 +46,7 @@ let server;
 
   server = oidc.listen(port, () => {
     console.log(
-      `mock-oidc-user-server listening on port ${port}, check http://${host}:${port}/.well-known/openid-configuration`
+      `mock-oidc-user-server listening on port ${port}, check ${host}/.well-known/openid-configuration`
     );
   });
 })().catch(err => {
