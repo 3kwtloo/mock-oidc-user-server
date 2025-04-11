@@ -1,14 +1,19 @@
 /* eslint-disable no-console */
 
-const assert = require('assert');
-const camelCase = require('camelcase');
+import assert from "assert";
+import camelCase from "camelcase";
 
-const Provider = require('oidc-provider');
+import Provider from "oidc-provider";
 
-const host = process.env.HOST || 'localhost';
+const host = process.env.HOST || "localhost";
 const port = process.env.PORT || 3000;
 
-const config = ['CLIENT_ID', 'CLIENT_SECRET', 'CLIENT_REDIRECT_URI', 'CLIENT_LOGOUT_REDIRECT_URI'].reduce((acc, v) => {
+const config = [
+  "CLIENT_ID",
+  "CLIENT_SECRET",
+  "CLIENT_REDIRECT_URI",
+  "CLIENT_LOGOUT_REDIRECT_URI",
+].reduce((acc, v) => {
   assert(process.env[v], `${v} config missing`);
   acc[camelCase(v)] = process.env[v];
   return acc;
@@ -20,13 +25,13 @@ const oidcConfig = {
     discovery: true,
     registration: false,
     revocation: true,
-    sessionManagement: false
+    sessionManagement: false,
   },
   format: {
-    default: 'jwt',
-    AccessToken: 'jwt',
-    RefreshToken: 'jwt'
-  }
+    default: "jwt",
+    AccessToken: "jwt",
+    RefreshToken: "jwt",
+  },
 };
 
 const oidc = new Provider(host, oidcConfig);
@@ -36,8 +41,8 @@ const clients = [
     client_id: config.clientId,
     client_secret: config.clientSecret,
     redirect_uris: [config.clientRedirectUri],
-    post_logout_redirect_uris: [config.clientLogoutRedirectUri]
-  }
+    post_logout_redirect_uris: [config.clientLogoutRedirectUri],
+  },
 ];
 
 let server;
@@ -49,7 +54,7 @@ let server;
       `mock-oidc-user-server listening on port ${port}, check ${host}/.well-known/openid-configuration`
     );
   });
-})().catch(err => {
+})().catch((err) => {
   if (server && server.listening) server.close();
   console.error(err);
   process.exitCode = 1;
